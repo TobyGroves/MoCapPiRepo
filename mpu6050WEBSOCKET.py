@@ -1,5 +1,6 @@
 from flask import request
-from flask_api import FlaskAPI
+from flask_socketio import SocketIO
+from flask_socketio import send, emit
 import smbus
 import time
 
@@ -203,48 +204,25 @@ class mpu6050:
 mpu1 = mpu6050(0x68)
 mpu2 = mpu6050(0x69)
 
-app = FlaskAPI(__name__)
-
-@app.route('/getData',methods=["GET"])
-def api_root():
-	accel_data1 = mpu1.get_accel_data()
-	gyro_data1 = mpu1.get_gyro_data()
-	accel_data2 = mpu2.get_accel_data()
-	gyro_data2 = mpu2.get_gyro_data()
-	return{
-		"mpu1": {
-			"accel": {
-				"x" : accel_data1['x'],
-				"y" : accel_data1['y'],
-				"z" : accel_data1['z']
-			},
-			"gyro" : {
-				"x" : gyro_data1['x'],
-				"y" : gyro_data1['y'],
-				"z" : gyro_data1['z']
-			
-			}
-		},
-		"mpu2": {
-			"accel": {
-				"x" : accel_data2['x'],
-				"y" : accel_data2['y'],
-				"z" : accel_data2['z']
-			},
-			"gyro" : {
-				"x" : gyro_data2['x'],
-				"y" : gyro_data2['y'],
-				"z" : gyro_data2['z']
-			
-			}
-		}
-	}
-
-@app.route('/test',methods=["GET"])
-def api_test1():
-	return{
-		"Text":"Test Works"
-	}
+app = Flask(__name__)
+app.config['SECRET_KEY'] = 'secret!'
+socketio = SocketIO(app)
 
 if __name__ == "__main__":
-	app.run()
+	socketio.run()
+
+@socketio.on('message')
+def handle_message(message):
+    send(message)
+    
+@socketio.on('connect')
+def test_connection():
+    emit('my response',{'data':'connected'})
+    
+@socketio.on('disconnect')
+def test_disconnect():
+    print('Client disconnected')
+    
+
+
+
