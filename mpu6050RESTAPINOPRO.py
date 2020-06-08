@@ -45,7 +45,7 @@ class mpu6050:
         y = self.read_i2c_word(self.ACCEL_YOUT0)
         z = self.read_i2c_word(self.ACCEL_ZOUT0)
 
-            return {'x': x, 'y': y, 'z': z}
+        return {'x': x, 'y': y, 'z': z}
 
     def get_gyro_data(self):
         x = self.read_i2c_word(self.GYRO_XOUT0)
