@@ -171,24 +171,6 @@ class mpu6050:
 
         x = x / gyro_scale_modifier
         y = y / gyro_scale_modifier
-        z = self.read_i2c_word(self.GYRO_ZOUT0)
-
-        gyro_scale_modifier = None
-        gyro_range = self.read_gyro_range(True)
-
-        if gyro_range == self.GYRO_RANGE_250DEG:
-            gyro_scale_modifier = self.GYRO_SCALE_MODIFIER_250DEG
-        elif gyro_range == self.GYRO_RANGE_500DEG:
-            gyro_scale_modifier = self.GYRO_SCALE_MODIFIER_500DEG
-        elif gyro_range == self.GYRO_RANGE_1000DEG:
-            gyro_scale_modifier = self.GYRO_SCALE_MODIFIER_1000DEG
-        elif gyro_range == self.GYRO_RANGE_2000DEG:
-            gyro_scale_modifier = self.GYRO_SCALE_MODIFIER_2000DEG
-        else:
-            gyro_scale_modifier = self.GYRO_SCALE_MODIFIER_250DEG
-
-        x = x / gyro_scale_modifier
-        y = y / gyro_scale_modifier
         z = z / gyro_scale_modifier
 
         return {'x': x, 'y': y, 'z': z}
