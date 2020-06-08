@@ -11,6 +11,8 @@ class mpu6050:
     bus = None
 
     # MPU-6050 Registers
+    PWR_MGMT_1 = 0x6B
+    PWR_MGMT_2 = 0x6C
 
     ACCEL_XOUT0 = 0x3B
     ACCEL_YOUT0 = 0x3D
