@@ -37,7 +37,7 @@ class mpu6050:
     mean_gy = 0
     mean_gz = 0
 
-    buffersize = 200
+    buffersize = 1000
 
     acel_deadzone = 8
     gyro_deadzone = 1
