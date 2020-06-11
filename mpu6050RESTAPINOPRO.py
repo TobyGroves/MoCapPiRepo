@@ -39,7 +39,7 @@ class mpu6050:
 
     buffersize = 1000
 
-    acel_deadzone = 8
+    acel_deadzone = 100
     gyro_deadzone = 1
 
     def __init__(self, address, bus=1):
@@ -63,16 +63,16 @@ class mpu6050:
             return value
 
     def get_accel_data(self, g = False):
-        x = self.read_i2c_word(self.ACCEL_XOUT0)
-        y = self.read_i2c_word(self.ACCEL_YOUT0)
-        z = self.read_i2c_word(self.ACCEL_ZOUT0)
+        x = self.read_i2c_word(self.ACCEL_XOUT0) + self.xAccelOffset
+        y = self.read_i2c_word(self.ACCEL_YOUT0) + self.yAccelOffset
+        z = self.read_i2c_word(self.ACCEL_ZOUT0) + self.zAccelOffset
 
         return {'x': x, 'y': y, 'z': z}
 
     def get_gyro_data(self):
-        x = self.read_i2c_word(self.GYRO_XOUT0)
-        y = self.read_i2c_word(self.GYRO_YOUT0)
-        z = self.read_i2c_word(self.GYRO_ZOUT0)
+        x = self.read_i2c_word(self.GYRO_XOUT0) + self.xGyroOffset
+        y = self.read_i2c_word(self.GYRO_YOUT0) + self.yGyroOffset
+        z = self.read_i2c_word(self.GYRO_ZOUT0) + self.zGyroOffset
 
         return {'x': x, 'y': y, 'z': z}
 
@@ -119,6 +119,18 @@ class mpu6050:
         buff_gx = 0
         buff_gy = 0
         buff_gz = 0
+        min_ax = self.read_i2c_word(self.ACCEL_XOUT0) + self.xAccelOffset
+        min_ay = self.read_i2c_word(self.ACCEL_YOUT0) + self.yAccelOffset
+        min_az = self.read_i2c_word(self.ACCEL_ZOUT0) + self.zAccelOffset
+        min_gx = self.read_i2c_word(self.GYRO_XOUT0) + self.xGyroOffset
+        min_gy = self.read_i2c_word(self.GYRO_YOUT0) + self.yGyroOffset
+        min_gz = self.read_i2c_word(self.GYRO_ZOUT0) + self.zGyroOffset
+        max_ax = 0
+        max_ay = 0
+        max_az = 0
+        max_gx = 0
+        max_gy = 0
+        max_gz = 0
         print("calculating mean sensors")
         while(i<(self.buffersize+101)):
             # read raw accel and gyro measurements
@@ -128,7 +140,6 @@ class mpu6050:
             gx = self.read_i2c_word(self.GYRO_XOUT0) + self.xGyroOffset
             gy = self.read_i2c_word(self.GYRO_YOUT0) + self.yGyroOffset
             gz = self.read_i2c_word(self.GYRO_ZOUT0) + self.zGyroOffset
-
             if(i>100 and i<=(self.buffersize+100)): # first 100 measures are discarded
                 buff_ax = buff_ax+ax
                 buff_ay = buff_ay+ay
@@ -136,6 +147,31 @@ class mpu6050:
                 buff_gx = buff_gx+gx
                 buff_gy = buff_gy+gy
                 buff_gz = buff_gz+gz
+
+                if(ax < min_ax) :
+                    min_ax = ax
+                if(ay < min_ay) :
+                    min_ay = ay
+                if(az < min_az) :
+                    min_az = az
+                if(gx < min_gx) :
+                    min_gx = gx
+                if(gy < min_gy) :
+                    min_gy = gy
+                if(gz < min_gz) :
+                    min_gz = gz
+                if(ax > max_ax) :
+                    max_ax = ax
+                if(ay > max_ay) :
+                    max_ay = ay
+                if(az > max_az) :
+                    max_az = az
+                if(gx > max_gx) :
+                    max_gx = gx
+                if(gy > max_gy) :
+                    max_gy = gy
+                if(gz > max_gz) :
+                    max_gz = gz
 
             if(i==(self.buffersize+100)):
                 self.mean_ax=buff_ax/self.buffersize
@@ -147,6 +183,18 @@ class mpu6050:
             i+= 1
             #time.sleep(0.002) # so we dont get repeated measurements
         print("mean sensors calculated")
+        print("min ax")
+        print(min_ax , max_ax)
+        print("min ay")
+        print(min_ay, max_ay)
+        print("min az")
+        print(min_az, max_az)
+        print("min gx")
+        print(min_gx, max_gx)
+        print("min gy")
+        print(min_ay, max_gy)
+        print("min gz")
+        print(min_az, max_gz)
 
 
 
@@ -159,14 +207,15 @@ class mpu6050:
         gy_offset =-self.mean_gy/4
         gz_offset =-self.mean_gz/4
         print("in calibration")
+        count = 0
         while(1):
+
             self.setXAccelOffset(ax_offset)
             self.setYAccelOffset(ay_offset)
             self.setZAccelOffset(az_offset)
             self.setXGyroOffset(gx_offset)
             self.setYGyroOffset(gy_offset)
             self.setZGyroOffset(gz_offset)
-
 
             ready = 0;
             print("calibration loop")
@@ -203,7 +252,9 @@ class mpu6050:
                 gz_offset=gz_offset-self.mean_gz/(self.gyro_deadzone+1)
             print("readyness level")
             print(ready)
+            count +=1
             if(ready==6):
+                print(count)
                 print("exiting calibration loop")
                 break
 
