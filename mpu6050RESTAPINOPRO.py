@@ -109,7 +109,7 @@ class mpu6050:
         self.meansensors()
         self.calibration()
         self.meansensors()
-		return 0
+		return (0)
 
     def meansensors(self):
         i = 0
