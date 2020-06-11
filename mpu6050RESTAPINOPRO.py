@@ -99,7 +99,7 @@ class mpu6050:
     def setZGyroOffset(self,val):
         self.zGyroOffset = val
 
-	def calibrate(self):
+    def calibrate(self):
         self.setXAccelOffset(0)
         self.setYAccelOffset(0)
         self.setZAccelOffset(0)
