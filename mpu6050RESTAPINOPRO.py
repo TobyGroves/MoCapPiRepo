@@ -214,12 +214,12 @@ def api_calibrate():
         "mean_gx" : mpu1.mean_gx,
         "mean_gy" : mpu1.mean_gy,
         "mean_gz" : mpu1.mean_gz,
-        "ax_offset" : mpu1.ax_offset,
-        "ay_offset" : mpu1.ay_offset,
-        "az_offset" : mpu1.az_offset,
-        "gx_offset" : mpu1.gx_offset,
-        "gy_offset" : mpu1.gy_offset,
-        "gz_offset" : mpu1.gz_offset
+        "ax_offset" : mpu1.xAccelOffset,
+        "ay_offset" : mpu1.yAccelOffset,
+        "az_offset" : mpu1.zAccelOffset,
+        "gx_offset" : mpu1.xGyroOffset,
+        "gy_offset" : mpu1.yGyroOffset,
+        "gz_offset" : mpu1.zGyroOffset
     }
 
 @app.route('/getData',methods=["GET"])
