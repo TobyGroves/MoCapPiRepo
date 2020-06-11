@@ -37,7 +37,7 @@ class mpu6050:
     mean_gy = 0
     mean_gz = 0
 
-    buffersize = 1000
+    buffersize = 200
 
     acel_deadzone = 8
     gyro_deadzone = 1
@@ -111,7 +111,7 @@ class mpu6050:
         #self.calibration()
         self.setXAccelOffset(-self.mean_ax)
         self.setYAccelOffset(-self.mean_ay)
-        self.setZAccelOffset(-self.mean_az)
+        self.setZAccelOffset(16384-self.mean_az)
         self.setXGyroOffset(-self.mean_gx)
         self.setYGyroOffset(-self.mean_gy)
         self.setZGyroOffset(-self.mean_gz)
