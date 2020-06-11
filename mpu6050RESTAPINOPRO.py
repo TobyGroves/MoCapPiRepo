@@ -143,7 +143,7 @@ class mpu6050:
                 self.mean_gx=buff_gx/self.buffersize
                 self.mean_gy=buff_gy/self.buffersize
                 self.mean_gz=buff_gz/self.buffersize
-            i++
+            i+= 1
             time.wait(0.002) # so we dont get repeated measurements
 
     def calibration(self):
@@ -160,32 +160,32 @@ class mpu6050:
 
             self.meansensors()
             if(abs(self.mean_ax)<=self.acel_deadzone):
-                ready++
+                ready+=1
             else:
                 self.ax_offset=self.ax_offset -self.mean_ax/self.acel_deadzone
 
             if(abs(self.mean_ay)<=self.acel_deadzone):
-                ready++
+                ready+=1
             else:
                 self.ay_offset=self.ay_offset -self.mean_ay/self.acel_deadzone
 
             if(abs(16384-self.mean_az)<=self.acel_deadzone):
-                ready++
+                ready+=1
             else:
                 self.ay_offset=self.ay_offset +(16384-self.mean_ay)/self.acel_deadzone
 
             if(abs(self.mean_gx)<=self.gyro_deadzone):
-                ready++
+                ready+=1
             else:
                 self.gx_offset=self.gx_offset-self.mean_gx/(self.gyro_deadzone+1)
 
             if(abs(self.mean_gy)<=self.gyro_deadzone):
-                ready++
+                ready+=1
             else:
                 self.gy_offset=self.gy_offset-self.mean_gy/(self.gyro_deadzone+1)
 
             if(abs(self.mean_gz)<=self.gyro_deadzone):
-                ready++
+                ready+=1
             else:
                 self.gz_offset=self.gz_offset-self.mean_gz/(self.gyro_deadzone+1)
             if(ready==6):
