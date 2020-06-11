@@ -192,6 +192,8 @@ class mpu6050:
                 ready+=1
             else:
                 gz_offset=gz_offset-self.mean_gz/(self.gyro_deadzone+1)
+            print("readyness level")
+            print(ready)
             if(ready==6):
                 print("exiting calibration loop")
                 self.setXAccelOffset(ax_offset)
