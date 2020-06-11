@@ -22,6 +22,26 @@ class mpu6050:
     GYRO_YOUT0 = 0x45
     GYRO_ZOUT0 = 0x47
 
+    xAccelOffset = 0.0
+    yAccelOffset = 0.0
+    zAccelOffset = 0.0
+
+    xGyroOffset = 0.0
+    yGyroOffset = 0.0
+    zGyroOffset = 0.0
+
+    mean_ax = 0
+    mean_ay = 0
+    mean_az = 0
+    mean_gx = 0
+    mean_gy = 0
+    mean_gz = 0
+
+    buffersize = 1000
+
+    acel_deadzone = 8
+    gyro_deadzone = 1
+
     def __init__(self, address, bus=1):
         self.address = address
         self.bus = smbus.SMBus(bus)
@@ -61,14 +81,147 @@ class mpu6050:
         gyro = self.get_gyro_data()
 
         return [accel, gyro]
+    def setXAccelOffset(self,val):
+        self.xAccelOffset = val
+
+    def setYAccelOffset(self,val):
+        self.yAccelOffset = val
+
+    def setZAccelOffset(self,val):
+        self.zAccelOffset = val
+
+    def setXGyroOffset(self,val):
+        self.xGyroOffset = val
+
+    def setYGyroOffset(self,val):
+        self.yGyroOffset = val
+
+    def setZGyroOffset(self,val):
+        self.zGyroOffset = val
+
+	def calibrate(self):
+        self.setXAccelOffset(0)
+        self.setYAccelOffset(0)
+        self.setZAccelOffset(0)
+        self.setXGyroOffset(0)
+        self.setYGyroOffset(0)
+        self.setZGyroOffset(0)
+        self.meansensors()
+        self.calibration()
+        self.meansensors()
+		return 0
+
+    def meansensors(self):
+        i = 0
+        buff_ax = 0
+        buff_ay = 0
+        buff_az = 0
+        buff_gx = 0
+        buff_gy = 0
+        buff_gz = 0
+
+        while(i<(self.buffersize+101)):
+            # read raw accel and gyro measurements
+            ax = self.read_i2c_word(self.ACCEL_XOUT0)
+            ay = self.read_i2c_word(self.ACCEL_YOUT0)
+            az = self.read_i2c_word(self.ACCEL_ZOUT0)
+            gx = self.read_i2c_word(self.GYRO_XOUT0)
+            gy = self.read_i2c_word(self.GYRO_YOUT0)
+            gz = self.read_i2c_word(self.GYRO_ZOUT0)
+
+            if(i>100 && i<=(self.buffersize+100)): # first 100 measures are discarded
+                buff_ax = buff_ax+ax
+                buff_ay = buff_ay+ay
+                buff_az = buff_az+az
+                buff_gx = buff_gx+gx
+                buff_gy = buff_gy+gy
+                buff_gz = buff_gz+gz
+
+            if(i==(self.buffersize+100)):
+                self.mean_ax=buff_ax/self.buffersize
+                self.mean_ay=buff_ay/self.buffersize
+                self.mean_az=buff_az/self.buffersize
+                self.mean_gx=buff_gx/self.buffersize
+                self.mean_gy=buff_gy/self.buffersize
+                self.mean_gz=buff_gz/self.buffersize
+            i++
+            time.wait(0.002) # so we dont get repeated measurements
+
+    def calibration(self):
+        self.ax_offset =-mean_ax/8;
+        self.ay_offset =-mean_ay/8
+        self.az_offset =(16384-mean_az)/8
+
+        self.gx_offset =-mean_gx/4
+        self.gy_offset =-mean_gy/4
+        self.gz_offset =-mean_gz/4
+
+        while(1):
+            ready = 0;
+
+            self.meansensors()
+            if(abs(self.mean_ax)<=self.acel_deadzone):
+                ready++
+            else:
+                self.ax_offset=self.ax_offset -self.mean_ax/self.acel_deadzone
+
+            if(abs(self.mean_ay)<=self.acel_deadzone):
+                ready++
+            else:
+                self.ay_offset=self.ay_offset -self.mean_ay/self.acel_deadzone
+
+            if(abs(16384-self.mean_az)<=self.acel_deadzone):
+                ready++
+            else:
+                self.ay_offset=self.ay_offset +(16384-self.mean_ay)/self.acel_deadzone
+
+            if(abs(self.mean_gx)<=self.gyro_deadzone):
+                ready++
+            else:
+                self.gx_offset=self.gx_offset-self.mean_gx/(self.gyro_deadzone+1)
+
+            if(abs(self.mean_gy)<=self.gyro_deadzone):
+                ready++
+            else:
+                self.gy_offset=self.gy_offset-self.mean_gy/(self.gyro_deadzone+1)
+
+            if(abs(self.mean_gz)<=self.gyro_deadzone):
+                ready++
+            else:
+                self.gz_offset=self.gz_offset-self.mean_gz/(self.gyro_deadzone+1)
+            if(ready==6):
+                break
+
+
 
 mpu1 = mpu6050(0x68)
 mpu2 = mpu6050(0x69)
 
 app = FlaskAPI(__name__)
 
+@app.route('/calibrate',methods=["GET"])
+def api_calibrate():
+    if(mpu1.calibrate() == 0):
+        return {
+        "status" : "Calibration Complete",
+        "mean_ax" : mpu1.mean_ax,
+        "mean_ay" : mpu1.mean_ay,
+        "mean_az" : mpu1.mean_az,
+        "mean_gx" : mpu1.mean_gx,
+        "mean_gy" : mpu1.mean_gy,
+        "mean_gz" : mpu1.mean_gz,
+        "ax_offset" : mpu1.ax_offset,
+        "ay_offset" : mpu1.ay_offset,
+        "az_offset" : mpu1.az_offset,
+        "gx_offset" : mpu1.gx_offset,
+        "gy_offset" : mpu1.gy_offset,
+        "gz_offset" : mpu1.gz_offset
+        }
+    else:
+        return {"status" : "Calibration failed"}
+
 @app.route('/getData',methods=["GET"])
-def api_root():
+def api_getData():
 	accel_data1 = mpu1.get_accel_data()
 	gyro_data1 = mpu1.get_gyro_data()
 	accel_data2 = mpu2.get_accel_data()
@@ -84,7 +237,7 @@ def api_root():
 				"x" : gyro_data1['x'],
 				"y" : gyro_data1['y'],
 				"z" : gyro_data1['z']
-			
+
 			}
 		},
 		"mpu2": {
@@ -97,7 +250,7 @@ def api_root():
 				"x" : gyro_data2['x'],
 				"y" : gyro_data2['y'],
 				"z" : gyro_data2['z']
-			
+
 			}
 		}
 	}
