@@ -144,7 +144,7 @@ class mpu6050:
                 self.mean_gy=buff_gy/self.buffersize
                 self.mean_gz=buff_gz/self.buffersize
             i+= 1
-            time.wait(0.002) # so we dont get repeated measurements
+            time.sleep(0.002) # so we dont get repeated measurements
 
     def calibration(self):
         ax_offset =-mean_ax/8;
