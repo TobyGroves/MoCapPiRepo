@@ -147,13 +147,13 @@ class mpu6050:
             time.wait(0.002) # so we dont get repeated measurements
 
     def calibration(self):
-        self.ax_offset =-mean_ax/8;
-        self.ay_offset =-mean_ay/8
-        self.az_offset =(16384-mean_az)/8
+        ax_offset =-mean_ax/8;
+        ay_offset =-mean_ay/8
+        az_offset =(16384-mean_az)/8
 
-        self.gx_offset =-mean_gx/4
-        self.gy_offset =-mean_gy/4
-        self.gz_offset =-mean_gz/4
+        gx_offset =-mean_gx/4
+        gy_offset =-mean_gy/4
+        gz_offset =-mean_gz/4
 
         while(1):
             ready = 0;
@@ -162,33 +162,39 @@ class mpu6050:
             if(abs(self.mean_ax)<=self.acel_deadzone):
                 ready+=1
             else:
-                self.ax_offset=self.ax_offset -self.mean_ax/self.acel_deadzone
+                ax_offset=ax_offset -self.mean_ax/self.acel_deadzone
 
             if(abs(self.mean_ay)<=self.acel_deadzone):
                 ready+=1
             else:
-                self.ay_offset=self.ay_offset -self.mean_ay/self.acel_deadzone
+                ay_offset=ay_offset -self.mean_ay/self.acel_deadzone
 
             if(abs(16384-self.mean_az)<=self.acel_deadzone):
                 ready+=1
             else:
-                self.ay_offset=self.ay_offset +(16384-self.mean_ay)/self.acel_deadzone
+                ay_offset=ay_offset +(16384-self.mean_ay)/self.acel_deadzone
 
             if(abs(self.mean_gx)<=self.gyro_deadzone):
                 ready+=1
             else:
-                self.gx_offset=self.gx_offset-self.mean_gx/(self.gyro_deadzone+1)
+                gx_offset=gx_offset-self.mean_gx/(self.gyro_deadzone+1)
 
             if(abs(self.mean_gy)<=self.gyro_deadzone):
                 ready+=1
             else:
-                self.gy_offset=self.gy_offset-self.mean_gy/(self.gyro_deadzone+1)
+                gy_offset=gy_offset-self.mean_gy/(self.gyro_deadzone+1)
 
             if(abs(self.mean_gz)<=self.gyro_deadzone):
                 ready+=1
             else:
-                self.gz_offset=self.gz_offset-self.mean_gz/(self.gyro_deadzone+1)
+                gz_offset=gz_offset-self.mean_gz/(self.gyro_deadzone+1)
             if(ready==6):
+                self.setXAccelOffset(ax_offset)
+                self.setYAccelOffset(ay_offset)
+                self.setZAccelOffset(az_offset)
+                self.setXGyroOffset(gx_offset)
+                self.setYGyroOffset(gy_offset)
+                self.setZGyroOffset(gz_offset)
                 break
 
 
