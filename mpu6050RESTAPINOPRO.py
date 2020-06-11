@@ -206,7 +206,7 @@ app = FlaskAPI(__name__)
 
 @app.route('/calibrate',methods=["GET"])
 def api_calibrate():
-    calibration()
+    mpu1.calibrate()
     return {
         "status" : "Calibration Complete",
         "mean_ax" : mpu1.mean_ax,
