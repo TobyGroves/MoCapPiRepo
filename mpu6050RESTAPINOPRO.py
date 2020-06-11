@@ -147,13 +147,13 @@ class mpu6050:
             time.sleep(0.002) # so we dont get repeated measurements
 
     def calibration(self):
-        ax_offset =-mean_ax/8;
-        ay_offset =-mean_ay/8
-        az_offset =(16384-mean_az)/8
+        ax_offset =-self.mean_ax/8;
+        ay_offset =-self.mean_ay/8
+        az_offset =(16384-self.mean_az)/8
 
-        gx_offset =-mean_gx/4
-        gy_offset =-mean_gy/4
-        gz_offset =-mean_gz/4
+        gx_offset =-self.mean_gx/4
+        gy_offset =-self.mean_gy/4
+        gz_offset =-self.mean_gz/4
 
         while(1):
             ready = 0;
