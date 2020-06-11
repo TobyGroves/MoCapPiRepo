@@ -128,7 +128,7 @@ class mpu6050:
             gy = self.read_i2c_word(self.GYRO_YOUT0)
             gz = self.read_i2c_word(self.GYRO_ZOUT0)
 
-            if(i>100 && i<=(self.buffersize+100)): # first 100 measures are discarded
+            if(i>100 and i<=(self.buffersize+100)): # first 100 measures are discarded
                 buff_ax = buff_ax+ax
                 buff_ay = buff_ay+ay
                 buff_az = buff_az+az
