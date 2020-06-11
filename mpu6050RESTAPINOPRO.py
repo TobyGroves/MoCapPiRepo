@@ -171,6 +171,7 @@ class mpu6050:
             ready = 0;
             print("calibration loop")
             self.meansensors()
+            print(abs(self.mean_ax))
             if(abs(self.mean_ax)<=self.acel_deadzone):
                 ready+=1
             else:
