@@ -109,6 +109,12 @@ class mpu6050:
         print("set offsets to 0")
         self.meansensors()
         #self.calibration()
+        self.setXAccelOffset(-self.mean_ax)
+        self.setYAccelOffset(-self.mean_ay)
+        self.setZAccelOffset(-self.mean_az)
+        self.setXGyroOffset(-self.mean_gx)
+        self.setYGyroOffset(-self.mean_gy)
+        self.setZGyroOffset(-self.mean_gz)
         self.meansensors()
 
     def meansensors(self):
@@ -195,12 +201,6 @@ class mpu6050:
         print(min_ay, max_gy)
         print("min gz")
         print(min_az, max_gz)
-        self.setXAccelOffset(-self.mean_ax)
-        self.setYAccelOffset(-self.mean_ay)
-        self.setZAccelOffset(-self.mean_az)
-        self.setXGyroOffset(-self.mean_gx)
-        self.setYGyroOffset(-self.mean_gy)
-        self.setZGyroOffset(-self.mean_gz)
 
 
     def calibration(self):
