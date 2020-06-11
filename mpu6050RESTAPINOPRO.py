@@ -122,12 +122,12 @@ class mpu6050:
         print("calculating mean sensors")
         while(i<(self.buffersize+101)):
             # read raw accel and gyro measurements
-            ax = self.read_i2c_word(self.ACCEL_XOUT0)
-            ay = self.read_i2c_word(self.ACCEL_YOUT0)
-            az = self.read_i2c_word(self.ACCEL_ZOUT0)
-            gx = self.read_i2c_word(self.GYRO_XOUT0)
-            gy = self.read_i2c_word(self.GYRO_YOUT0)
-            gz = self.read_i2c_word(self.GYRO_ZOUT0)
+            ax = self.read_i2c_word(self.ACCEL_XOUT0) - xAccelOffset
+            ay = self.read_i2c_word(self.ACCEL_YOUT0) - yAccelOffset
+            az = self.read_i2c_word(self.ACCEL_ZOUT0) - zAccelOffset
+            gx = self.read_i2c_word(self.GYRO_XOUT0) - xGyroOffset
+            gy = self.read_i2c_word(self.GYRO_YOUT0) - yGyroOffset
+            gz = self.read_i2c_word(self.GYRO_ZOUT0) - zGyroOffset
 
             if(i>100 and i<=(self.buffersize+100)): # first 100 measures are discarded
                 buff_ax = buff_ax+ax
