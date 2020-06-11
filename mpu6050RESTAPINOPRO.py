@@ -145,7 +145,7 @@ class mpu6050:
                 self.mean_gy=buff_gy/self.buffersize
                 self.mean_gz=buff_gz/self.buffersize
             i+= 1
-            time.sleep(0.002) # so we dont get repeated measurements
+            #time.sleep(0.002) # so we dont get repeated measurements
         print("mean sensors calculated")
 
 
