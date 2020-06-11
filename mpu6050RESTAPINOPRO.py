@@ -109,7 +109,6 @@ class mpu6050:
         self.meansensors()
         self.calibration()
         self.meansensors()
-		return (0)
 
     def meansensors(self):
         i = 0
@@ -201,8 +200,7 @@ app = FlaskAPI(__name__)
 
 @app.route('/calibrate',methods=["GET"])
 def api_calibrate():
-    if(mpu1.calibrate() == 0):
-        return {
+    return {
         "status" : "Calibration Complete",
         "mean_ax" : mpu1.mean_ax,
         "mean_ay" : mpu1.mean_ay,
@@ -216,9 +214,7 @@ def api_calibrate():
         "gx_offset" : mpu1.gx_offset,
         "gy_offset" : mpu1.gy_offset,
         "gz_offset" : mpu1.gz_offset
-        }
-    else:
-        return {"status" : "Calibration failed"}
+    }
 
 @app.route('/getData',methods=["GET"])
 def api_getData():
