@@ -106,7 +106,7 @@ class mpu6050:
         self.setXGyroOffset(0)
         self.setYGyroOffset(0)
         self.setZGyroOffset(0)
-        println("set offsets to 0")
+        print("set offsets to 0")
         self.meansensors()
         self.calibration()
         self.meansensors()
@@ -119,7 +119,7 @@ class mpu6050:
         buff_gx = 0
         buff_gy = 0
         buff_gz = 0
-        println("calculating mean sensors")
+        print("calculating mean sensors")
         while(i<(self.buffersize+101)):
             # read raw accel and gyro measurements
             ax = self.read_i2c_word(self.ACCEL_XOUT0)
@@ -145,7 +145,7 @@ class mpu6050:
                 self.mean_gy=buff_gy/self.buffersize
                 self.mean_gz=buff_gz/self.buffersize
             i+= 1
-            println("waiting for 2 miliseconds in mean sensor loop")
+            print("waiting for 2 miliseconds in mean sensor loop")
             time.sleep(0.002) # so we dont get repeated measurements
 
 
@@ -158,10 +158,10 @@ class mpu6050:
         gx_offset =-self.mean_gx/4
         gy_offset =-self.mean_gy/4
         gz_offset =-self.mean_gz/4
-        println("in calibration")
+        print("in calibration")
         while(1):
             ready = 0;
-            println("calibration loop")
+            print("calibration loop")
             self.meansensors()
             if(abs(self.mean_ax)<=self.acel_deadzone):
                 ready+=1
@@ -193,7 +193,7 @@ class mpu6050:
             else:
                 gz_offset=gz_offset-self.mean_gz/(self.gyro_deadzone+1)
             if(ready==6):
-                println("exiting calibration loop")
+                print("exiting calibration loop")
                 self.setXAccelOffset(ax_offset)
                 self.setYAccelOffset(ay_offset)
                 self.setZAccelOffset(az_offset)
@@ -211,6 +211,7 @@ app = FlaskAPI(__name__)
 
 @app.route('/calibrate',methods=["GET"])
 def api_calibrate():
+    print("recived calibration request")
     mpu1.calibrate()
     return {
         "status" : "Calibration Complete",
