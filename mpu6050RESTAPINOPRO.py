@@ -109,7 +109,7 @@ class mpu6050:
         print("set offsets to 0")
         self.meansensors()
         self.calibration()
-        self.meansensors()
+        #self.meansensors()
 
     def meansensors(self):
         i = 0
@@ -160,6 +160,14 @@ class mpu6050:
         gz_offset =-self.mean_gz/4
         print("in calibration")
         while(1):
+            self.setXAccelOffset(ax_offset)
+            self.setYAccelOffset(ay_offset)
+            self.setZAccelOffset(az_offset)
+            self.setXGyroOffset(gx_offset)
+            self.setYGyroOffset(gy_offset)
+            self.setZGyroOffset(gz_offset)
+
+
             ready = 0;
             print("calibration loop")
             self.meansensors()
@@ -176,7 +184,7 @@ class mpu6050:
             if(abs(16384-self.mean_az)<=self.acel_deadzone):
                 ready+=1
             else:
-                ay_offset=ay_offset +(16384-self.mean_ay)/self.acel_deadzone
+                az_offset=az_offset +(16384-self.mean_az)/self.acel_deadzone
 
             if(abs(self.mean_gx)<=self.gyro_deadzone):
                 ready+=1
@@ -196,12 +204,6 @@ class mpu6050:
             print(ready)
             if(ready==6):
                 print("exiting calibration loop")
-                self.setXAccelOffset(ax_offset)
-                self.setYAccelOffset(ay_offset)
-                self.setZAccelOffset(az_offset)
-                self.setXGyroOffset(gx_offset)
-                self.setYGyroOffset(gy_offset)
-                self.setZGyroOffset(gz_offset)
                 break
 
 
