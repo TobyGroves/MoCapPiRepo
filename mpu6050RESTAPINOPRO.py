@@ -206,7 +206,8 @@ class mpu6050:
         print(min_az, max_gz)
 
 dataLoopCount = 0
-
+accel_dataconst1 = 0
+gyro_dataconst1 = 0
 mpu1 = mpu6050(0x68)
 mpu2 = mpu6050(0x69)
 
@@ -286,5 +287,5 @@ def dataHandeller():
 
 
 if __name__ == "__main__":
-    thread.start_new_thread(dataHandeller)
+    x = threading.Thread(target=dataHandeller)
     app.run()
