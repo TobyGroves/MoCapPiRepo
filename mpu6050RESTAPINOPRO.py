@@ -245,7 +245,7 @@ def api_getData():
     dataLoopCount = 0
     accel_data2 = mpu2.get_accel_data()
     gyro_data2 = mpu2.get_gyro_data()
-	return{
+	return {
         "mpu1": {
             "accel": {
 				"x" : tempAccel_Data1['x'],
