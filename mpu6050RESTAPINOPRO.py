@@ -2,6 +2,7 @@ from flask import request
 from flask_api import FlaskAPI
 import smbus
 import time
+import thread
 
 class mpu6050:
     GRAVITIY_MS2 = 9.80665
@@ -204,6 +205,9 @@ class mpu6050:
         print("min gz")
         print(min_az, max_gz)
 
+dataLoopCount = 0
+
+
 mpu1 = mpu6050(0x68)
 mpu2 = mpu6050(0x69)
 
@@ -234,10 +238,11 @@ def api_calibrate():
 
 @app.route('/getData',methods=["GET"])
 def api_getData():
-    tempAccel_Data1 = accel_data1
-    accel_data1 = {'x': 0, 'y': 0, 'z': 0}
-    tempGyro_data1 = gyro_data1
-	gyro_data1 = {'x': 0, 'y': 0, 'z': 0}
+    tempAccel_Data1 = accel_data1 / dataLoopCount
+    accel_data1 = None
+    tempGyro_data1 = gyro_data1 / dataLoopCount
+	gyro_data1 = None
+    dataLoopCount = 0
 	accel_data2 = mpu2.get_accel_data()
 	gyro_data2 = mpu2.get_gyro_data()
 	return{
@@ -279,7 +284,7 @@ def dataHandeller():
     while (1):
         accel_data1 = accel_data1 + mpu1.get_accel_data()
         gyro_data1 = gyro_data1 + mpu1.get_gyro_data()
-
+        dataLoopCount += 1
         time.sleep(0.001)
 
 if __name__ == "__main__":
