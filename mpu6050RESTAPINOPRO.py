@@ -235,9 +235,9 @@ def api_calibrate():
 @app.route('/getData',methods=["GET"])
 def api_getData():
     tempAccel_Data1 = accel_data1
-    accel_data1 = 0
+    accel_data1 = {'x': 0, 'y': 0, 'z': 0}
     tempGyro_data1 = gyro_data1
-	gyro_data1 = 0
+	gyro_data1 = {'x': 0, 'y': 0, 'z': 0}
 	accel_data2 = mpu2.get_accel_data()
 	gyro_data2 = mpu2.get_gyro_data()
 	return{
