@@ -67,6 +67,10 @@ class mpu6050:
         y = self.read_i2c_word(self.ACCEL_YOUT0) + self.yAccelOffset
         z = self.read_i2c_word(self.ACCEL_ZOUT0) + self.zAccelOffset
 
+        x = x * self.GRAVITY_MS2;
+        y = y * self.GRAVITY_MS2;
+        z = z * self.GRAVITY_MS2;
+
         return {'x': x, 'y': y, 'z': z}
 
     def get_gyro_data(self):
@@ -201,69 +205,6 @@ class mpu6050:
         print(min_ay, max_gy)
         print("min gz")
         print(min_az, max_gz)
-
-
-    def calibration(self):
-        ax_offset =-self.mean_ax/8;
-        ay_offset =-self.mean_ay/8
-        az_offset =(16384-self.mean_az)/8
-
-        gx_offset =-self.mean_gx/4
-        gy_offset =-self.mean_gy/4
-        gz_offset =-self.mean_gz/4
-        print("in calibration")
-        count = 0
-        while(1):
-
-            self.setXAccelOffset(ax_offset)
-            self.setYAccelOffset(ay_offset)
-            self.setZAccelOffset(az_offset)
-            self.setXGyroOffset(gx_offset)
-            self.setYGyroOffset(gy_offset)
-            self.setZGyroOffset(gz_offset)
-
-            ready = 0;
-            print("calibration loop")
-            self.meansensors()
-            print(abs(self.mean_ax))
-            if(abs(self.mean_ax)<=self.acel_deadzone):
-                ready+=1
-            else:
-                ax_offset=ax_offset -self.mean_ax/self.acel_deadzone
-
-            if(abs(self.mean_ay)<=self.acel_deadzone):
-                ready+=1
-            else:
-                ay_offset=ay_offset -self.mean_ay/self.acel_deadzone
-
-            if(abs(16384-self.mean_az)<=self.acel_deadzone):
-                ready+=1
-            else:
-                az_offset=az_offset +(16384-self.mean_az)/self.acel_deadzone
-
-            if(abs(self.mean_gx)<=self.gyro_deadzone):
-                ready+=1
-            else:
-                gx_offset=gx_offset-self.mean_gx/(self.gyro_deadzone+1)
-
-            if(abs(self.mean_gy)<=self.gyro_deadzone):
-                ready+=1
-            else:
-                gy_offset=gy_offset-self.mean_gy/(self.gyro_deadzone+1)
-
-            if(abs(self.mean_gz)<=self.gyro_deadzone):
-                ready+=1
-            else:
-                gz_offset=gz_offset-self.mean_gz/(self.gyro_deadzone+1)
-            print("readyness level")
-            print(ready)
-            count +=1
-            if(ready==6):
-                print(count)
-                print("exiting calibration loop")
-                break
-
-
 
 mpu1 = mpu6050(0x68)
 mpu2 = mpu6050(0x69)
