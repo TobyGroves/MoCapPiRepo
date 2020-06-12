@@ -211,8 +211,8 @@ dataLoopCount = 0
 mpu1 = mpu6050(0x68)
 mpu2 = mpu6050(0x69)
 
-accel_data1 = {'x': 0, 'y': 0, 'z': 0}
-gyro_data1 = {'x': 0, 'y': 0, 'z': 0}
+accel_data1 = None
+gyro_data1 = None
 
 app = FlaskAPI(__name__)
 
@@ -288,6 +288,7 @@ def dataHandeller():
         time.sleep(0.001)
 
 if __name__ == "__main__":
-
+    accel_data1 = {'x': 0, 'y': 0, 'z': 0}
+    gyro_data1 = {'x': 0, 'y': 0, 'z': 0}
     thread.start_new_thread(dataHandeller)
     app.run()
