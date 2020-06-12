@@ -2,7 +2,7 @@ from flask import request
 from flask_api import FlaskAPI
 import smbus
 import time
-import thread
+import threading
 
 class mpu6050:
     GRAVITIY_MS2 = 9.80665
