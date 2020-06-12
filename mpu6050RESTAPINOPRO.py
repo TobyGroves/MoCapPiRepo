@@ -4,8 +4,6 @@ import smbus
 import time
 
 class mpu6050:
-
-    # Global Variables
     GRAVITIY_MS2 = 9.80665
     address = None
     bus = None
@@ -67,9 +65,9 @@ class mpu6050:
         y = self.read_i2c_word(self.ACCEL_YOUT0) + self.yAccelOffset
         z = self.read_i2c_word(self.ACCEL_ZOUT0) + self.zAccelOffset
 
-        x = x * self.GRAVITY_MS2;
-        y = y * self.GRAVITY_MS2;
-        z = z * self.GRAVITY_MS2;
+        x = x * self.GRAVITIY_MS2;
+        y = y * self.GRAVITIY_MS2;
+        z = z * self.GRAVITIY_MS2;
 
         return {'x': x, 'y': y, 'z': z}
 
