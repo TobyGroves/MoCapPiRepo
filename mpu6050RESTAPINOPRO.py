@@ -246,8 +246,8 @@ def api_getData():
     accel_data2 = mpu2.get_accel_data()
     gyro_data2 = mpu2.get_gyro_data()
 	return{
-		"mpu1": {
-			"accel": {
+        "mpu1": {
+            "accel": {
 				"x" : tempAccel_Data1['x'],
 				"y" : tempAccel_Data1['y'],
 				"z" : tempAccel_Data1['z']
