@@ -207,6 +207,9 @@ class mpu6050:
 mpu1 = mpu6050(0x68)
 mpu2 = mpu6050(0x69)
 
+accel_data1 = {'x': 0, 'y': 0, 'z': 0}
+gyro_data1 = {'x': 0, 'y': 0, 'z': 0}
+
 app = FlaskAPI(__name__)
 
 @app.route('/calibrate',methods=["GET"])
@@ -231,21 +234,23 @@ def api_calibrate():
 
 @app.route('/getData',methods=["GET"])
 def api_getData():
-	accel_data1 = mpu1.get_accel_data()
-	gyro_data1 = mpu1.get_gyro_data()
+    tempAccel_Data1 = accel_data1
+    accel_data1 = 0
+    tempGyro_data1 = gyro_data1
+	gyro_data1 = 0
 	accel_data2 = mpu2.get_accel_data()
 	gyro_data2 = mpu2.get_gyro_data()
 	return{
 		"mpu1": {
 			"accel": {
-				"x" : accel_data1['x'],
-				"y" : accel_data1['y'],
-				"z" : accel_data1['z']
+				"x" : tempAccel_Data1['x'],
+				"y" : tempAccel_Data1['y'],
+				"z" : tempAccel_Data1['z']
 			},
 			"gyro" : {
-				"x" : gyro_data1['x'],
-				"y" : gyro_data1['y'],
-				"z" : gyro_data1['z']
+				"x" : tempGyro_data1['x'],
+				"y" : tempGyro_data1['y'],
+				"z" : tempGyro_data1['z']
 
 			}
 		},
@@ -270,5 +275,14 @@ def api_test1():
 		"Text":"Test Works"
 	}
 
+def dataHandeller():
+    while (1):
+        accel_data1 = accel_data1 + mpu1.get_accel_data()
+        gyro_data1 = gyro_data1 + mpu1.get_gyro_data()
+
+        time.sleep(0.001)
+
 if __name__ == "__main__":
+
+    thread.start_new_thread(dataHandeller)
 	app.run()
