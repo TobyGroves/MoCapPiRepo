@@ -207,12 +207,8 @@ class mpu6050:
 
 dataLoopCount = 0
 
-
 mpu1 = mpu6050(0x68)
 mpu2 = mpu6050(0x69)
-
-accel_data1 = None
-gyro_data1 = None
 
 app = FlaskAPI(__name__)
 
@@ -237,26 +233,23 @@ def api_calibrate():
     }
 
 @app.route('/getData',methods=["GET"])
-def api_getData():
-    tempAccel_Data1 = accel_data1 / dataLoopCount
-    accel_data1 = None
-    tempGyro_data1 = gyro_data1 / dataLoopCount
-    gyro_data1 = None
-    dataLoopCount = 0
+def api_getData(self):
+    accel_data1 = mpu1.get_accel_data()
+    gyro_data1 = mpu1.get_gyro_data()
     accel_data2 = mpu2.get_accel_data()
     gyro_data2 = mpu2.get_gyro_data()
 
     return {
         "mpu1": {
             "accel": {
-				"x" : tempAccel_Data1['x'],
-				"y" : tempAccel_Data1['y'],
-				"z" : tempAccel_Data1['z']
+				"x" : accel_data1['x'],
+				"y" : accel_data1['y'],
+				"z" : accel_data1['z']
 			},
 			"gyro" : {
-				"x" : tempGyro_data1['x'],
-				"y" : tempGyro_data1['y'],
-				"z" : tempGyro_data1['z']
+				"x" : gyro_data1['x'],
+				"y" : gyro_data1['y'],
+				"z" : gyro_data1['z']
 
 			}
 		},
@@ -282,13 +275,16 @@ def api_test1():
 
 def dataHandeller():
     while (1):
-        accel_data1 = accel_data1 + mpu1.get_accel_data()
-        gyro_data1 = gyro_data1 + mpu1.get_gyro_data()
+        accel_dataconst1 = accel_dataconst1 + mpu1.get_accel_data()
+        gyro_dataconst1 = gyro_dataconst1 + mpu1.get_gyro_data()
         dataLoopCount += 1
         time.sleep(0.001)
+        print("ThreadTest")
+        #if this works do an update every so oftern
+
+
+
 
 if __name__ == "__main__":
-    accel_data1 = {'x': 0, 'y': 0, 'z': 0}
-    gyro_data1 = {'x': 0, 'y': 0, 'z': 0}
     thread.start_new_thread(dataHandeller)
     app.run()
