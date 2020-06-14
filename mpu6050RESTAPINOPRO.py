@@ -120,14 +120,12 @@ class mpu6050:
         self.setZGyroOffset(0)
         print("set offsets to 0")
         self.meansensors()
-        #self.calibration()
         self.setXAccelOffset(-self.mean_ax)
         self.setYAccelOffset(-self.mean_ay)
         self.setZAccelOffset(16384-self.mean_az)
         self.setXGyroOffset(-self.mean_gx)
         self.setYGyroOffset(-self.mean_gy)
         self.setZGyroOffset(-self.mean_gz)
-        self.meansensors()
 
     def meansensors(self):
         i = 0
