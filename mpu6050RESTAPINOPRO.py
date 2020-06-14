@@ -79,15 +79,6 @@ class mpu6050:
         y = self.read_i2c_word(self.ACCEL_YOUT0) + self.yAccelOffset
         z = self.read_i2c_word(self.ACCEL_ZOUT0) + self.zAccelOffset
 
-        if(x < self.max_ax and x > self.min_ax):
-            x = 0
-
-        if(y < self.max_ay and y > self.min_ay):
-            y = 0
-
-        if(z < self.max_az and z > self.min_az):
-            z = 0
-
         return {'x': x, 'y': y, 'z': z}
 
     def get_gyro_data(self):
