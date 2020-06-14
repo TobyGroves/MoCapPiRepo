@@ -267,7 +267,7 @@ def api_calibrate():
     }
 
 @app.route('/getData',methods=["GET"])
-def api_getData(self):
+def api_getData():
     accel_data1 = mpu1.get_accel_data()
     gyro_data1 = mpu1.get_gyro_data()
     accel_data2 = mpu2.get_accel_data()
