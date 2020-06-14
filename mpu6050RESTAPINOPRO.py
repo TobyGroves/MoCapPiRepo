@@ -86,15 +86,6 @@ class mpu6050:
         y = self.read_i2c_word(self.GYRO_YOUT0) + self.yGyroOffset
         z = self.read_i2c_word(self.GYRO_ZOUT0) + self.zGyroOffset
 
-        if(x < self.max_gx and x > self.min_gx):
-            x = 0
-
-        if(y < self.max_gy and y > self.min_gy):
-            y = 0
-
-        if(z < self.max_gz and z > self.min_gz):
-            z = 0
-
         return {'x': x, 'y': y, 'z': z}
 
     def get_all_data(self):
@@ -146,18 +137,6 @@ class mpu6050:
         buff_gx = 0
         buff_gy = 0
         buff_gz = 0
-        self.min_ax = self.read_i2c_word(self.ACCEL_XOUT0) + self.xAccelOffset
-        self.min_ay = self.read_i2c_word(self.ACCEL_YOUT0) + self.yAccelOffset
-        self.min_az = self.read_i2c_word(self.ACCEL_ZOUT0) + self.zAccelOffset
-        self.min_gx = self.read_i2c_word(self.GYRO_XOUT0) + self.xGyroOffset
-        self.min_gy = self.read_i2c_word(self.GYRO_YOUT0) + self.yGyroOffset
-        self.min_gz = self.read_i2c_word(self.GYRO_ZOUT0) + self.zGyroOffset
-        self.max_ax = 0
-        self.max_ay = 0
-        self.max_az = 0
-        self.max_gx = 0
-        self.max_gy = 0
-        self.max_gz = 0
         print("calculating mean sensors")
         while(i<(self.buffersize+101)):
             # read raw accel and gyro measurements
@@ -175,31 +154,6 @@ class mpu6050:
                 buff_gy = buff_gy+gy
                 buff_gz = buff_gz+gz
 
-                if(ax < self.min_ax) :
-                    self.min_ax = ax
-                if(ay < self.min_ay) :
-                    self.min_ay = ay
-                if(az < self.min_az) :
-                    self.min_az = az
-                if(gx < self.min_gx) :
-                    self.min_gx = gx
-                if(gy < self.min_gy) :
-                    self.min_gy = gy
-                if(gz < self.min_gz) :
-                    self.min_gz = gz
-                if(ax > self.max_ax) :
-                    self.max_ax = ax
-                if(ay > self.max_ay) :
-                    self.max_ay = ay
-                if(az > self.max_az) :
-                    self.max_az = az
-                if(gx > self.max_gx) :
-                    self.max_gx = gx
-                if(gy > self.max_gy) :
-                    self.max_gy = gy
-                if(gz > self.max_gz) :
-                    self.max_gz = gz
-
             if(i==(self.buffersize+100)):
                 self.mean_ax=buff_ax/self.buffersize
                 self.mean_ay=buff_ay/self.buffersize
@@ -210,18 +164,6 @@ class mpu6050:
             i+= 1
             #time.sleep(0.002) # so we dont get repeated measurements
         print("mean sensors calculated")
-        print("min ax")
-        print(self.min_ax , self.max_ax)
-        print("min ay")
-        print(self.min_ay, self.max_ay)
-        print("min az")
-        print(self.min_az, self.max_az)
-        print("min gx")
-        print(self.min_gx, self.max_gx)
-        print("min gy")
-        print(self.min_ay, self.max_gy)
-        print("min gz")
-        print(self.min_az, self.max_gz)
 
 dataLoopCount = 0
 accel_dataconst1 = 0
