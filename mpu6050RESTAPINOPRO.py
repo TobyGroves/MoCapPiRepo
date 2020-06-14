@@ -74,25 +74,19 @@ class mpu6050:
         else:
             return value
 
-    def get_accel_data(self, g = False):
+    def get_accel_data(self):
         x = self.read_i2c_word(self.ACCEL_XOUT0) + self.xAccelOffset
         y = self.read_i2c_word(self.ACCEL_YOUT0) + self.yAccelOffset
         z = self.read_i2c_word(self.ACCEL_ZOUT0) + self.zAccelOffset
 
         if(x < self.max_ax and x > self.min_ax):
             x = 0
-        else :
-            x = x * self.GRAVITIY_MS2
 
         if(y < self.max_ay and y > self.min_ay):
             y = 0
-        else :
-            y = y * self.GRAVITIY_MS2
 
         if(z < self.max_az and z > self.min_az):
             z = 0
-        else :
-            z = z * self.GRAVITIY_MS2
 
         return {'x': x, 'y': y, 'z': z}
 
@@ -266,6 +260,7 @@ def api_calibrate():
         "gz_offset" : mpu1.zGyroOffset
     }
 
+
 @app.route('/getData',methods=["GET"])
 def api_getData():
     accel_data1 = mpu1.get_accel_data()
@@ -284,7 +279,6 @@ def api_getData():
 				"x" : gyro_data1['x'],
 				"y" : gyro_data1['y'],
 				"z" : gyro_data1['z']
-
 			}
 		},
 		"mpu2": {
@@ -307,13 +301,14 @@ def api_test1():
 		"Text":"Test Works"
 	}
 
+#fix the threading issue
 def dataHandeller():
     while (1):
         accel_dataconst1 = accel_dataconst1 + mpu1.get_accel_data()
         gyro_dataconst1 = gyro_dataconst1 + mpu1.get_gyro_data()
         dataLoopCount += 1
         time.sleep(0.001)
-        print("ThreadTest")
+        #print("ThreadTest")
         #if this works do an update every so oftern
 
 
