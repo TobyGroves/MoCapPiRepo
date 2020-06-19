@@ -250,9 +250,10 @@ def create_app():
 	
 	return _app
 
-app = create_app()
+
 
 
 if __name__ == "__main__":
-    x = threading.Thread(target=dataHandeller)
+    #x = threading.Thread(target=dataHandeller)
+	app = create_app()
     app.run(threaded=True)
