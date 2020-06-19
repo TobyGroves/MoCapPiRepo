@@ -259,4 +259,4 @@ def dataHandeller():
 
 if __name__ == "__main__":
     #x = threading.Thread(target=dataHandeller)
-	app.run(threaded=True)
+	app.run(threaded=True, processes = 100)
