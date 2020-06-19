@@ -248,7 +248,8 @@ thread = None
 
 @app.route('/threadTest',methods=["GET"])
 def api_threadtest():
-	global threadprint current_thread()
+	global thread
+	print current_thread()
 	if not thread:
 		thread = Thread(target = dataHandeller)
 		thread.setDaemon(True)
