@@ -1,8 +1,9 @@
 from flask import request
 from flask_api import FlaskAPI
+from threading import Thread , current_thread
 import smbus
 import time
-import threading
+#import threading
 
 class mpu6050:
     GRAVITIY_MS2 = 9.80665
@@ -236,21 +237,26 @@ def api_getData():
 		}
 	}
 
-@app.route('/test',methods=["GET"])
-def api_test1():
-	return{
-		"Text":"Test Works"
-	}
-
 #fix the threading issue
 def dataHandeller():
-    while (1):
-        accel_dataconst1 = accel_dataconst1 + mpu1.get_accel_data()
-        gyro_dataconst1 = gyro_dataconst1 + mpu1.get_gyro_data()
-        dataLoopCount += 1
-        time.sleep(0.001)
+    while True:
+        time.sleep(1)
         print("ThreadTest")
         #if this works do an update every so oftern
+
+thread = None
+
+@app.route('/threadTest',methods=["GET"])
+def api_threadtest():
+	global threadprint current_thread()
+	if not thread:
+		thread = Thread(target = dataHandeller)
+		thread.setDaemon(True)
+		thread.start()
+	return{
+		"Text":"Thread started"
+	}
+
 
 
 
@@ -258,5 +264,4 @@ def dataHandeller():
 
 
 if __name__ == "__main__":
-    #x = threading.Thread(target=dataHandeller)
-	app.run(threaded=True, processes = 100)
+	app.run()
