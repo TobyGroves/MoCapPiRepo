@@ -172,6 +172,14 @@ mpu2 = mpu6050(0x69)
 #testThread = threading.Thread()
 
 #app = FlaskAPI(__name__)
+def create_app():
+	_app = FlaskAPI(__name__)
+	
+	return _app
+
+
+app = create_app()
+
 
 @app.route('/calibrate',methods=["GET"])
 def api_calibrate():
@@ -245,15 +253,10 @@ def dataHandeller():
         #if this works do an update every so oftern
 
 
-def create_app():
-	_app = FlaskAPI(__name__)
-	
-	return _app
 
 
 
 
 if __name__ == "__main__":
     #x = threading.Thread(target=dataHandeller)
-	app = create_app()
 	app.run(threaded=True)
