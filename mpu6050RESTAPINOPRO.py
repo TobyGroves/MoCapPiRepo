@@ -1,6 +1,6 @@
 from flask import request
 from flask_api import FlaskAPI
-from threading import Thread , current_thread
+from threading import Thread, current_thread
 import smbus
 import time
 #import threading
@@ -249,7 +249,6 @@ thread = None
 @app.route('/threadTest',methods=["GET"])
 def api_threadtest():
 	global thread
-	print current_thread()
 	if not thread:
 		thread = Thread(target = dataHandeller)
 		thread.setDaemon(True)
