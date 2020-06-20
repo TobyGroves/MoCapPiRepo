@@ -284,10 +284,11 @@ def dataHandeller():
     lastPollTime = time.time()
     while recording:
         timeSinceLastPoll = time.time() - lastPollTime;
+        data = {"accel_data" : mpu1.get_accel_data(), "gyro_data" : mpu1.get_gyro_data(), "timeSinceLastPoll" : timeSinceLastPoll}
         if isList1:
-            list1.append({mpu1.get_accel_data(),'timeSinceLastPoll':timeSinceLastPoll})
+            list1.append(data)
         else:
-            list2.append({mpu1.get_accel_data(),'timeSinceLastPoll':timeSinceLastPoll})
+            list2.append(data)
         lastPollTime = time.time()
         time.sleep(0.001)
 
