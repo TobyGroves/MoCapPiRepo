@@ -236,9 +236,17 @@ def api_getData():
 			}
 		}
 	}
+isList1 = True
+recording = False
+
+list1 = None
+list2 = None
 
 @app.route('/getDataMaxfps',methods=["GET"])
 def api_getDataMaxfps():
+    global isList1
+    global list1
+    global list2
     if isList1:
         isList1 = False
         tempList = list1
@@ -273,12 +281,6 @@ def api_threadtest():
 	return{
 		"Text":"Thread started"
 	}
-
-isList1 = True
-recording = False
-
-list1 = None
-list2 = None
 
 def dataHandeller():
     lastPollTime = time.time()
