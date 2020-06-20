@@ -293,6 +293,7 @@ def api_threadtest():
 def dataHandeller():
     print("called datahandeller")
     lastPollTime = time.time()
+    print(recording)
     while recording:
         print("in Loop Data handeller")
         timeSinceLastPoll = time.time() - lastPollTime;
