@@ -250,14 +250,15 @@ def api_getDataMaxfps():
     if isList1:
         isList1 = False
         tempList = list1
-        list1 = None
+        #list1 = None
         return {
             "mpuMoveList":tempList
         }
+
     else:
         isList1 = True
         tempList = list2
-        list2 = None
+        #list2 = None
         return {
             "mpuMoveList":tempList
         }
