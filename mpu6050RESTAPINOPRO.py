@@ -312,9 +312,9 @@ def api_startRecording():
 def api_stopRecording():
 
     recording = False
-	return{
-		"Text":"Recording stopped"
-	}
+    return{
+        "Text":"Recording stopped"
+    }
 
 
 
