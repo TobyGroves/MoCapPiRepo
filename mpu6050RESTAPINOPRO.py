@@ -170,7 +170,8 @@ gyro_dataconst1 = 0
 mpu1 = mpu6050(0x68)
 mpu2 = mpu6050(0x69)
 isList1 = True
-recording = False
+bob = False
+bob = False
 list1 = None
 list2 = None
 thread = None
@@ -292,8 +293,8 @@ def api_threadtest():
 def dataHandeller():
     print("called datahandeller")
     lastPollTime = time.time()
-    print(recording)
-    while recording:
+    print(bob)
+    while bob:
         print("in Loop Data handeller")
         timeSinceLastPoll = time.time() - lastPollTime;
         data = {"accel_data" : mpu1.get_accel_data(), "gyro_data" : mpu1.get_gyro_data(), "timeSinceLastPoll" : timeSinceLastPoll}
@@ -314,10 +315,10 @@ def api_startRecording():
         dataHandellerThread = Thread(target = dataHandeller)
         dataHandellerThread.setDaemon(True)
         print("before making true")
-        print(recording)
-        recording = True
+        print(bob)
+        bob = True
         print("after making true")
-        print(recording)
+        print(bob)
         isList1 = True
         list1 = None
         list2 = None
@@ -327,7 +328,7 @@ def api_startRecording():
     }
 @app.route('/stopRecording',methods=["GET"])
 def api_stopRecording():
-    recording = False
+    bob = False
     return{
         "Text":"Recording stopped"
     }
