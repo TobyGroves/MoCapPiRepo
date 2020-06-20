@@ -296,8 +296,8 @@ dataHandellerThread = None
 
 @app.route('/startRecording',methods=["GET"])
 def api_startRecording():
-	global dataHandellerThread
-	if not dataHandellerThread:
+    global dataHandellerThread
+    if not dataHandellerThread:
         dataHandellerThread = Thread(target = dataHandeller)
         dataHandellerThread.setDaemon(True)
         recording = True
