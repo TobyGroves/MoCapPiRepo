@@ -172,8 +172,8 @@ mpu2 = mpu6050(0x69)
 isList1 = True
 recording = False
 bob = False
-list1 = None
-list2 = None
+list1 = []
+list2 = []
 thread = None
 dataHandellerThread = None
 
@@ -257,7 +257,7 @@ def api_getDataMaxfps():
         tempList = list1
         print("1*****")
         print(tempList)
-        list1 = None
+        list1 = []
         return {
             "mpuMoveList":tempList
         }
@@ -267,7 +267,7 @@ def api_getDataMaxfps():
         tempList = list2
         print("2*****")
         print(tempList)
-        list2 = None
+        list2 = []
         return {
             "mpuMoveList":tempList
         }
@@ -326,8 +326,8 @@ def api_startRecording():
         print("after making true")
         print(recording)
         isList1 = True
-        list1 = None
-        list2 = None
+        list1 = []
+        list2 = []
         dataHandellerThread.start()
     return{
         "Text":"Recording started"
