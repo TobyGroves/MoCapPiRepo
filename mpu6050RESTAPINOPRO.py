@@ -244,9 +244,9 @@ list2 = None
 
 @app.route('/getDataMaxfps',methods=["GET"])
 def api_getDataMaxfps():
-    global isList1
-    global list1
-    global list2
+    isList1
+    list1
+    list2
     print ("------")
     print(list1)
     print(list2)
@@ -291,8 +291,10 @@ def api_threadtest():
 	}
 
 def dataHandeller():
+    print("called datahandeller")
     lastPollTime = time.time()
     while recording:
+        print("in Loop Data handeller")
         timeSinceLastPoll = time.time() - lastPollTime;
         data = {"accel_data" : mpu1.get_accel_data(), "gyro_data" : mpu1.get_gyro_data(), "timeSinceLastPoll" : timeSinceLastPoll}
         if isList1:
