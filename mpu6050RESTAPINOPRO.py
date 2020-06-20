@@ -247,9 +247,14 @@ def api_getDataMaxfps():
     global isList1
     global list1
     global list2
+    print ("------")
+    print(list1)
+    print(list2)
     if isList1:
         isList1 = False
         tempList = list1
+        print("1*****")
+        print(tempList)
         #list1 = None
         return {
             "mpuMoveList":tempList
@@ -258,6 +263,8 @@ def api_getDataMaxfps():
     else:
         isList1 = True
         tempList = list2
+        print("2*****")
+        print(tempList)
         #list2 = None
         return {
             "mpuMoveList":tempList
@@ -293,7 +300,9 @@ def dataHandeller():
         else:
             list2.append(data)
         lastPollTime = time.time()
-        time.sleep(0.001)
+        time.sleep(1)
+        print(list1)
+        print(list2)
 
 dataHandellerThread = None
 
