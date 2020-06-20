@@ -169,6 +169,12 @@ accel_dataconst1 = 0
 gyro_dataconst1 = 0
 mpu1 = mpu6050(0x68)
 mpu2 = mpu6050(0x69)
+isList1 = True
+recording = False
+list1 = None
+list2 = None
+thread = None
+dataHandellerThread = None
 
 #testThread = threading.Thread()
 
@@ -236,11 +242,6 @@ def api_getData():
 			}
 		}
 	}
-isList1 = True
-recording = False
-
-list1 = None
-list2 = None
 
 @app.route('/getDataMaxfps',methods=["GET"])
 def api_getDataMaxfps():
@@ -277,8 +278,6 @@ def testThred():
         print("ThreadTest")
         #if this works do an update every so oftern
 
-thread = None
-
 @app.route('/threadTest',methods=["GET"])
 def api_threadtest():
 	global thread
@@ -307,7 +306,6 @@ def dataHandeller():
         print(list1)
         print(list2)
 
-dataHandellerThread = None
 
 @app.route('/startRecording',methods=["GET"])
 def api_startRecording():
@@ -315,7 +313,11 @@ def api_startRecording():
     if not dataHandellerThread:
         dataHandellerThread = Thread(target = dataHandeller)
         dataHandellerThread.setDaemon(True)
+        print("before making true")
+        print(recording)
         recording = True
+        print("after making true")
+        print(recording)
         isList1 = True
         list1 = None
         list2 = None
@@ -325,7 +327,6 @@ def api_startRecording():
     }
 @app.route('/stopRecording',methods=["GET"])
 def api_stopRecording():
-
     recording = False
     return{
         "Text":"Recording stopped"
