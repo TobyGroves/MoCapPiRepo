@@ -1,6 +1,6 @@
 from flask import request
 from flask_api import FlaskAPI
-from threading import Thread, current_thread
+from threading import Thread
 import smbus
 import time
 #import threading
@@ -175,7 +175,7 @@ mpu2 = mpu6050(0x69)
 #app = FlaskAPI(__name__)
 def create_app():
 	_app = FlaskAPI(__name__)
-	
+
 	return _app
 
 
@@ -237,8 +237,25 @@ def api_getData():
 		}
 	}
 
+@app.route('/getData100fps',methods=["GET"])
+def api_getData():
+    if isList1:
+        isList1 = False
+        tempList = list1
+        list1 = None
+        return {
+            "mpuMoveList":tempList
+        }
+    else:
+        isList1 = True
+        tempList = list2
+        list2 = None
+        return {
+            "mpuMoveList":tempList
+        }
+
 #fix the threading issue
-def dataHandeller():
+def testThred():
     while True:
         time.sleep(1)
         print("ThreadTest")
@@ -250,14 +267,53 @@ thread = None
 def api_threadtest():
 	global thread
 	if not thread:
-		thread = Thread(target = dataHandeller)
+		thread = Thread(target = testThred)
 		thread.setDaemon(True)
 		thread.start()
 	return{
 		"Text":"Thread started"
 	}
 
+isList1 = True
+recording = False
 
+list1 = None
+list2 = None
+
+def dataHandeller():
+    lastPollTime = time.time()
+    while recording:
+        timeSinceLastPoll = time.time() - lastPollTime;
+        if isList1:
+            list1.append({mpu1.get_accel_data(),'timeSinceLastPoll':timeSinceLastPoll})
+        else:
+            list2.append({mpu1.get_accel_data(),'timeSinceLastPoll':timeSinceLastPoll})
+        lastPollTime = time.time()
+        time.sleep(0.001)
+
+dataHandellerThread = None
+
+@app.route('/startRecording',methods=["GET"])
+def api_startRecording():
+	global dataHandellerThread
+	if not dataHandellerThread:
+		dataHandellerThread = Thread(target = dataHandeller)
+		dataHandellerThread.setDaemon(True)
+        recording = True
+        isList1 = True
+        list1 = None
+        list2 = None
+		dataHandellerThread.start()
+	return{
+		"Text":"Recording started"
+	}
+@app.route('/stopRecording',methods=["GET"])
+def api_stopRecording():
+
+    recording = False
+	return{
+		"Text":"Recording stopped"
+	}
 
 
 
