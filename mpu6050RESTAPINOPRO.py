@@ -237,8 +237,8 @@ def api_getData():
 		}
 	}
 
-@app.route('/getData100fps',methods=["GET"])
-def api_getData():
+@app.route('/getDataMaxfps',methods=["GET"])
+def api_getDataMaxfps():
     if isList1:
         isList1 = False
         tempList = list1
