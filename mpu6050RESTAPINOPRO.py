@@ -170,7 +170,7 @@ gyro_dataconst1 = 0
 mpu1 = mpu6050(0x68)
 mpu2 = mpu6050(0x69)
 isList1 = True
-bob = False
+recording = False
 bob = False
 list1 = None
 list2 = None
@@ -246,9 +246,9 @@ def api_getData():
 
 @app.route('/getDataMaxfps',methods=["GET"])
 def api_getDataMaxfps():
-    isList1
-    list1
-    list2
+    global isList1
+    global list1
+    global list2
     print ("------")
     print(list1)
     print(list2)
@@ -257,7 +257,7 @@ def api_getDataMaxfps():
         tempList = list1
         print("1*****")
         print(tempList)
-        #list1 = None
+        list1 = None
         return {
             "mpuMoveList":tempList
         }
@@ -267,7 +267,7 @@ def api_getDataMaxfps():
         tempList = list2
         print("2*****")
         print(tempList)
-        #list2 = None
+        list2 = None
         return {
             "mpuMoveList":tempList
         }
@@ -291,10 +291,12 @@ def api_threadtest():
 	}
 
 def dataHandeller():
+    global list1
+    global list2
     print("called datahandeller")
     lastPollTime = time.time()
-    print(bob)
-    while bob:
+    print(recording)
+    while recording:
         print("in Loop Data handeller")
         timeSinceLastPoll = time.time() - lastPollTime;
         data = {"accel_data" : mpu1.get_accel_data(), "gyro_data" : mpu1.get_gyro_data(), "timeSinceLastPoll" : timeSinceLastPoll}
@@ -311,14 +313,18 @@ def dataHandeller():
 @app.route('/startRecording',methods=["GET"])
 def api_startRecording():
     global dataHandellerThread
+    global recording
+    global isList1
+    global list1
+    global list2
     if not dataHandellerThread:
         dataHandellerThread = Thread(target = dataHandeller)
         dataHandellerThread.setDaemon(True)
         print("before making true")
-        print(bob)
-        bob = True
+        print(recording)
+        recording = True
         print("after making true")
-        print(bob)
+        print(recording)
         isList1 = True
         list1 = None
         list2 = None
