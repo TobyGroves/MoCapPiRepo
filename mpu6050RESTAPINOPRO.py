@@ -305,9 +305,9 @@ def api_startRecording():
         list1 = None
         list2 = None
         dataHandellerThread.start()
-	return{
-		"Text":"Recording started"
-	}
+    return{
+        "Text":"Recording started"
+    }
 @app.route('/stopRecording',methods=["GET"])
 def api_stopRecording():
 
