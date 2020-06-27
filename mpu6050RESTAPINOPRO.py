@@ -292,7 +292,7 @@ def dataHandeller():
     global list2
     #print("called datahandeller")
     lastPollTime = time.time()
-    #print(recording)
+    print(recording)
     while recording:
         #print("in Loop Data handeller")
         timeSinceLastPoll = time.time() - lastPollTime;
