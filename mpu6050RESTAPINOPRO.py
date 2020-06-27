@@ -249,7 +249,7 @@ def api_getDataMaxfps():
     global isList1
     global list1
     global list2
-	if(recording):
+	if recording:
 		if isList1:
 			isList1 = False
 			tempList = list1
