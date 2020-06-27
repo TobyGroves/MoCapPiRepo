@@ -305,6 +305,7 @@ def dataHandeller():
         time.sleep(0.01)
         #print(list1)
         #print(list2)
+    thread.exit()
 
 
 @app.route('/startRecording',methods=["GET"])
@@ -333,6 +334,7 @@ def api_startRecording():
 def api_stopRecording():
     global recording
     recording = False
+
     return{
         "Text":"Recording stopped"
     }
