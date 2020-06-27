@@ -261,13 +261,13 @@ def api_getDataMaxfps():
             isList1 = True
             tempList = list2
             list2 = []
-			return {
-				"mpuMoveList":tempList
-			}
+            return {
+                    "mpuMoveList":tempList
+                    }
     else:
-		return {
-			"Error":"NotRecording"
-		}
+        return {
+                "Error":"NotRecording"
+                }
 
 #fix the threading issue
 def testThred():
