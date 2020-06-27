@@ -305,7 +305,6 @@ def dataHandeller():
         time.sleep(0.01)
         #print(list1)
         #print(list2)
-    thread.exit()
 
 
 @app.route('/startRecording',methods=["GET"])
@@ -315,6 +314,7 @@ def api_startRecording():
     global isList1
     global list1
     global list2
+    dataHandellerThread = None
     if not dataHandellerThread:
         dataHandellerThread = Thread(target = dataHandeller)
         dataHandellerThread.setDaemon(True)
