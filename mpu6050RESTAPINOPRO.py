@@ -249,21 +249,26 @@ def api_getDataMaxfps():
     global isList1
     global list1
     global list2
-    if isList1:
-        isList1 = False
-        tempList = list1
-        list1 = []
-        return {
-            "mpuMoveList":tempList
-        }
+	if(recording):
+		if isList1:
+			isList1 = False
+			tempList = list1
+			list1 = []
+			return {
+				"mpuMoveList":tempList
+			}
 
-    else:
-        isList1 = True
-        tempList = list2
-        list2 = []
-        return {
-            "mpuMoveList":tempList
-        }
+		else:
+			isList1 = True
+			tempList = list2
+			list2 = []
+			return {
+				"mpuMoveList":tempList
+			}
+	else:
+		return {
+			"Error":"NotRecording"
+		}
 
 #fix the threading issue
 def testThred():
@@ -327,7 +332,8 @@ def api_startRecording():
     }
 @app.route('/stopRecording',methods=["GET"])
 def api_stopRecording():
-    bob = False
+    global recording
+    recording = False
     return{
         "Text":"Recording stopped"
     }
