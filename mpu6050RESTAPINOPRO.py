@@ -249,23 +249,22 @@ def api_getDataMaxfps():
     global isList1
     global list1
     global list2
-	if recording:
-		if isList1:
-			isList1 = False
-			tempList = list1
-			list1 = []
+    if recording:
+        if isList1:
+            isList1 = False
+            tempList = list1
+            list1 = []
+            return {
+                    "mpuMoveList":tempList
+                    }
+        else:
+            isList1 = True
+            tempList = list2
+            list2 = []
 			return {
 				"mpuMoveList":tempList
 			}
-
-		else:
-			isList1 = True
-			tempList = list2
-			list2 = []
-			return {
-				"mpuMoveList":tempList
-			}
-	else:
+    else:
 		return {
 			"Error":"NotRecording"
 		}
